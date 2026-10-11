@@ -8,10 +8,15 @@ Version numbers cover the whole project (firmware, wiring and enclosure). The fi
 ## [Unreleased]
 
 ### To do before 1.0.0
-- Flash the firmware to a real board and confirm it pairs with Apple Home
+- Flash the firmware to a real board, confirm the LED behaves as described, and confirm it pairs with Apple Home
 - Confirm readings against a reference thermometer
 - Print the enclosure and confirm the devkit and sensor fit
 - Add a licence
+
+## [0.2.0] - 2026-10-11
+
+### Changed
+- On-board LED (GPIO2) now blinks while the device is waiting for Wi-Fi and stays on once connected; it goes back to blinking if Wi-Fi drops. This replaces HomeSpan's built-in status LED patterns, which are no longer enabled (`setStatusPin` removed)
 
 ## [0.1.0] - 2026-10-11
 
@@ -20,7 +25,7 @@ First tagged version. Hardware and firmware are drafted but not yet verified end
 ### Added
 - HomeSpan firmware for an ESP32-WROOM-32 devkit with an SHT31 on I2C (SDA GPIO21, SCL GPIO22), publishing temperature and humidity to Apple Home as separate tiles
 - Wi-Fi credentials entered at setup time and stored on the device, via the `HomeSpan-Setup` hotspot or the Serial Monitor `W` command; none are hard-coded
-- BOOT button as HomeSpan's control button and the on-board LED as its status light
+- BOOT button as HomeSpan's control button
 - Reading and publishing every 15 minutes (`READ_INTERVAL_MS`), plus one reading at boot
 - Firmware version printed at boot and reported through HomeSpan (`FW_VERSION`)
 - Wiring diagram (PNG and SVG) with pin positions checked against the HW-394 header order

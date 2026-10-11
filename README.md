@@ -6,7 +6,7 @@ A USB-C powered Wi-Fi temperature and humidity sensor that shows up natively in 
 
 `docs/wiring_diagram.svg` is the same diagram as a scalable vector.
 
-Current version: **0.1.0** (see [CHANGELOG.md](CHANGELOG.md)). Pre-release: not yet verified on finished hardware.
+Current version: **0.2.0** (see [CHANGELOG.md](CHANGELOG.md)). Pre-release: not yet verified on finished hardware.
 
 ---
 
@@ -91,7 +91,18 @@ No SSID or password is stored in the sketch. Enter them once; they are saved to 
 
 **Option B: Serial Monitor.** Open the Serial Monitor at 115200 baud with the line ending set to *Newline*, type `W`, and follow the prompts. It scans for networks, asks which to join, and asks for the password.
 
-To reopen the setup hotspot later, either type `A` in the Serial Monitor or use the BOOT button: hold it for 3 seconds to enter command mode, press briefly to step through the actions until you reach action 3 (Launch Access Point), then hold for 3 seconds to run it. Holding for 10 seconds performs a factory reset. The sketch assigns the BOOT button (GPIO0) as HomeSpan's control button and the on-board LED (GPIO2) as its status LED.
+To reopen the setup hotspot later, either type `A` in the Serial Monitor or use the BOOT button: hold it for 3 seconds to enter command mode, press briefly to step through the actions until you reach action 3 (Launch Access Point), then hold for 3 seconds to run it. Holding for 10 seconds performs a factory reset. The sketch assigns the BOOT button (GPIO0) as HomeSpan's control button.
+
+### Status LED
+
+The on-board LED (GPIO2) shows the Wi-Fi state:
+
+| LED | Meaning |
+|---|---|
+| Blinking | Not connected to Wi-Fi yet: connecting, or waiting for first-time setup |
+| Solid on | Connected to Wi-Fi and running |
+
+If the connection drops, the LED goes back to blinking until it reconnects. It shows Wi-Fi only: a solid LED does not mean the accessory is paired in Home.
 
 ### Pairing with Apple Home
 

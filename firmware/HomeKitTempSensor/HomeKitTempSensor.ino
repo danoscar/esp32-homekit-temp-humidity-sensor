@@ -35,6 +35,15 @@
  *     enter the password, it saves and restarts.
  *
  * ---------------------------------------------------------------------
+ * STATUS LED (on-board LED, GPIO2)
+ * ---------------------------------------------------------------------
+ *   Blinking  = not connected to Wi-Fi yet (connecting, or waiting for setup)
+ *   Solid on  = connected to Wi-Fi and running
+ *   If Wi-Fi drops the LED goes back to blinking until it reconnects.
+ *   (This is the sketch's own LED logic; HomeSpan's built-in status LED is
+ *   not used, so there is no conflict on the pin.)
+ *
+ * ---------------------------------------------------------------------
  * PAIRING WITH APPLE HOME
  * ---------------------------------------------------------------------
  *   Home app > + > Add Accessory > choose "Temp Sensor" > enter the code
@@ -46,19 +55,21 @@
  */
 
 #include "HomeSpan.h"
+#include <WiFi.h>
 #include <Wire.h>
 #include "Adafruit_SHT31.h"
 
 // ---------- Version (keep in step with /VERSION and CHANGELOG.md) ----------
-#define FW_VERSION  "0.1.0"
+#define FW_VERSION  "0.2.0"
 
 // ---------- Pins ----------
 #define PIN_SDA      21
 #define PIN_SCL      22
 #define PIN_CONTROL   0   // BOOT button — HomeSpan control button
-#define PIN_STATUS    2   // on-board LED (labelled D2) — HomeSpan status LED
+#define PIN_LED       2   // on-board LED (labelled D2), active high
 
 // ---------- Timing ----------
+#define LED_BLINK_MS  300                           // blink half-period while waiting for Wi-Fi
 #define READ_INTERVAL_MS  (15UL * 60UL * 1000UL)   // read + publish every 15 min
                                                      // (e.g. 60000 = every minute)
 
@@ -94,7 +105,23 @@ bool readSensor(float &tempC, float &humidity) {
 }
 
 // =====================================================================
+// Blink while Wi-Fi is down, solid on while it is up. Non-blocking.
+void updateStatusLed() {
+  static unsigned long lastToggle = 0;
+  static bool ledOn = false;
+  if (WiFi.status() == WL_CONNECTED) {
+    ledOn = true;
+  } else if (millis() - lastToggle >= LED_BLINK_MS) {
+    lastToggle = millis();
+    ledOn = !ledOn;
+  }
+  digitalWrite(PIN_LED, ledOn ? HIGH : LOW);
+}
+
+// =====================================================================
 void setup() {
+  pinMode(PIN_LED, OUTPUT);
+  digitalWrite(PIN_LED, LOW);
   Serial.begin(115200);   // HomeSpan's CLI and status messages use this
   Serial.printf("\nHomeKit Temp/Humidity Sensor firmware v%s\n", FW_VERSION);
 
@@ -104,7 +131,6 @@ void setup() {
   }
 
   homeSpan.setControlPin(PIN_CONTROL);   // without this HomeSpan ignores the button
-  homeSpan.setStatusPin(PIN_STATUS);
   homeSpan.enableAutoStartAP();          // start the setup hotspot if no Wi-Fi is stored
   homeSpan.setSketchVersion(FW_VERSION);  // shown in HomeSpan's status output
   homeSpan.begin(Category::Sensors, "Temp Sensor");
@@ -127,6 +153,7 @@ void setup() {
 // =====================================================================
 void loop() {
   homeSpan.poll();   // must run continuously to keep the HomeKit connection live
+  updateStatusLed();
 
   if (millis() - lastRead >= READ_INTERVAL_MS) {
     lastRead = millis();
