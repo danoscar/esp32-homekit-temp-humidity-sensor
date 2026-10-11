@@ -1,5 +1,13 @@
 # ESP32 HomeKit Temperature & Humidity Sensor
 
+![Version](https://img.shields.io/github/v/tag/danoscar/esp32-homekit-temp-humidity-sensor?label=version&color=blue)
+![License: MIT](https://img.shields.io/badge/license-MIT-green)
+![ESP32](https://img.shields.io/badge/ESP32-WROOM--32-red)
+![HomeKit](https://img.shields.io/badge/Apple%20HomeKit-via%20HomeSpan-orange)
+![Sensor](https://img.shields.io/badge/sensor-SHT3x-blue)
+![Arduino IDE](https://img.shields.io/badge/Arduino%20IDE-2.x-00979D)
+![Status](https://img.shields.io/badge/status-prototype%20working-yellow)
+
 A USB-C powered Wi-Fi temperature and humidity sensor that shows up natively in the Apple Home app. An ESP32 devkit reads an SHT3x (SHT30/SHT31 family) or SHT40 breakout over I2C and publishes the readings to HomeKit using the [HomeSpan](https://github.com/HomeSpan/HomeSpan) library. No hub, bridge or cloud account is needed, and the whole build is four parts and four wires.
 
 ![Wiring diagram](docs/wiring_diagram.png)
