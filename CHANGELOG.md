@@ -9,13 +9,14 @@ Version numbers cover the whole project (firmware, wiring and enclosure). The fi
 
 ### Added
 - MIT licence (`LICENSE`) and a Licence section in the README
-- Prototype photos in `docs/images/` (metadata stripped) and a Prototype section in the README
+- Prototype photos and Home app screenshots in `docs/images/` (metadata stripped) and a Prototype section in the README
 
 ### Verified
+- Pairs with Apple Home and reports temperature and humidity
 - v0.3.0 firmware flashed to hardware; the status LED blinks while waiting for Wi-Fi and stays solid once connected
 
 ### To do before 1.0.0
-- Confirm it pairs with Apple Home
+
 - Confirm readings against a reference thermometer
 - Print the modified lid and confirm the sensor board clicks in and the devkit fits the base
 

@@ -138,6 +138,17 @@ Close-up of the SHT3x breakout wired to the devkit (SDA, SCL, 3V3 and GND):
 
 ![SHT3x breakout wiring](docs/images/sensor-wiring.jpg)
 
+### In the Home app
+
+The sensor appears as two tiles, temperature and humidity, and rolls up into the Climate summary:
+
+![Climate summary in the Home app](docs/images/homekit-show.jpg)
+
+<p>
+<img src="docs/images/homekit-temperature.jpg" alt="Temperature tile in the Home app" width="320">
+<img src="docs/images/homekit-humidity.jpg" alt="Humidity tile in the Home app" width="320">
+</p>
+
 ## Housing
 
 The housing is the **[ESP Smart Home Case | Parametric | Antenna](https://makerworld.com/en/models/2540084-esp-smart-home-case-parametric-antenna)** by **i-BoxIt** on MakerWorld. It is a snap-fit two-part case for ESP boards. This project adds a mount for the SHT3x-DIS breakout to its lid:
