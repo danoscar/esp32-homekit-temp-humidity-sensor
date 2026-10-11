@@ -9,7 +9,7 @@ Version numbers cover the whole project (firmware, wiring and enclosure). The fi
 
 ### Added
 - MIT licence (`LICENSE`) and a Licence section in the README
-- `docs/images/` folder for photos of the real prototype
+- Prototype photos in `docs/images/` (metadata stripped) and a Prototype section in the README
 
 ### Verified
 - v0.3.0 firmware flashed to hardware; the status LED blinks while waiting for Wi-Fi and stays solid once connected

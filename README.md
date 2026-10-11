@@ -128,6 +128,16 @@ The sensor is read and published every 15 minutes by default. Change `READ_INTER
 
 If the upload fails with `Unable to verify flash chip connection`, set Upload Speed to 115200 and use the BOOT and EN sequence. The full troubleshooting table is in [`docs/arduino-ide-setup.md`](docs/arduino-ide-setup.md#troubleshooting).
 
+## Prototype
+
+Breadboard prototype powered over USB-C, running the v0.3.0 firmware. The red LED is the devkit's power LED.
+
+![ESP32 devkit and SHT3x on a breadboard](docs/images/prototype-breadboard.jpg)
+
+Close-up of the SHT3x breakout wired to the devkit (SDA, SCL, 3V3 and GND):
+
+![SHT3x breakout wiring](docs/images/sensor-wiring.jpg)
+
 ## Housing
 
 The housing is the **[ESP Smart Home Case | Parametric | Antenna](https://makerworld.com/en/models/2540084-esp-smart-home-case-parametric-antenna)** by **i-BoxIt** on MakerWorld. It is a snap-fit two-part case for ESP boards. This project adds a mount for the SHT3x-DIS breakout to its lid:
