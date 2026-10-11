@@ -60,7 +60,7 @@
 #include "Adafruit_SHT31.h"
 
 // ---------- Version (keep in step with /VERSION and CHANGELOG.md) ----------
-#define FW_VERSION  "0.2.0"
+#define FW_VERSION  "0.3.0"
 
 // ---------- Pins ----------
 #define PIN_SDA      21

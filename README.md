@@ -1,12 +1,12 @@
 # ESP32 HomeKit Temperature & Humidity Sensor
 
-A USB-C powered Wi-Fi temperature and humidity sensor that shows up natively in the Apple Home app. An ESP32 devkit reads an SHT31 or SHT40 over I2C and publishes the readings to HomeKit using the [HomeSpan](https://github.com/HomeSpan/HomeSpan) library. No hub, bridge or cloud account is needed, and the whole build is four parts and four wires.
+A USB-C powered Wi-Fi temperature and humidity sensor that shows up natively in the Apple Home app. An ESP32 devkit reads an SHT3x (SHT30/SHT31 family) or SHT40 breakout over I2C and publishes the readings to HomeKit using the [HomeSpan](https://github.com/HomeSpan/HomeSpan) library. No hub, bridge or cloud account is needed, and the whole build is four parts and four wires.
 
 ![Wiring diagram](docs/wiring_diagram.png)
 
 `docs/wiring_diagram.svg` is the same diagram as a scalable vector.
 
-Current version: **0.2.0** (see [CHANGELOG.md](CHANGELOG.md)). Pre-release: not yet verified on finished hardware.
+Current version: **0.3.0** (see [CHANGELOG.md](CHANGELOG.md)). Pre-release: not yet verified on finished hardware.
 
 ---
 
@@ -16,15 +16,17 @@ Current version: **0.2.0** (see [CHANGELOG.md](CHANGELOG.md)). Pre-release: not 
 - Always connected, so the Home app shows live values rather than stale ones
 - Wi-Fi credentials entered once at setup and stored on the device; nothing is hard-coded in the sketch
 - Stock devkit, no soldering to the board, no modification
-- Printable two-part enclosure included
+- 3D-printable housing with a click-in sensor mount and an opening so the sensor reads outside air (based on a MakerWorld case, see [Housing](#housing))
 
 ## Bill of materials
 
 | Qty | Part | Notes |
 |---|---|---|
 | 1 | ESP32-WROOM-32 devkit (USB-C, CH340C) | Developed on an HW-394 board; any standard 30/38-pin WROOM-32 devkit should work |
-| 1 | SHT31 or SHT40 I2C breakout | Default address `0x44` |
-| 2 | 4.7 kΩ resistors | I2C pull-ups. Skip them if your breakout already has pull-ups (most do) |
+| 1 | SHT3x-DIS breakout (SHT30/SHT31 family), 12 × 12 mm, with a 4-pin right-angle header | Default address `0x44`. An SHT40 also works with a small code change |
+| 2 | 4.7 kΩ resistors (optional) | I2C pull-ups. Skip them if your breakout already has pull-ups; the SHT3x-DIS board used here has two SMD resistors on SCL and SDA that look like on-board pull-ups |
+| 1 | 3D-printed housing | See [Housing](#housing). PETG recommended for the lid |
+| 1 | 4-pin Dupont female connector or 4 wires | To connect the breakout's header to the devkit |
 | 1 | 5 V USB-C power adapter, ≥ 500 mA | Any phone charger, plus a cable long enough for where you mount it |
 
 ## Wiring
@@ -54,6 +56,8 @@ I2C bus:
 | `GPIO21` | I2C SDA | SHT31/40 SDA, 4.7 kΩ pull-up to 3V3 |
 | `GPIO22` | I2C SCL | SHT31/40 SCL, 4.7 kΩ pull-up to 3V3 |
 
+The header order on the SHT3x-DIS board used here is **SCL, SDA, GND, VCC** (read the silkscreen on your own board). That differs from the order in the wiring diagram, so wire by pin name, not by position.
+
 ### Where the pins are on the HW-394
 
 All four pins are on the **right-hand header** when the board is held with its USB-C connector at the bottom. Reading top to bottom:
@@ -68,16 +72,19 @@ The sketch is in [`firmware/HomeKitTempSensor/HomeKitTempSensor.ino`](firmware/H
 
 ### Arduino IDE setup
 
+Full step-by-step guide, including the packages to install: [`docs/arduino-ide-setup.md`](docs/arduino-ide-setup.md).
+
+In short:
+
 | Setting | Value |
 |---|---|
 | Board package | `esp32` by Espressif Systems (Boards Manager) |
+| Libraries | **HomeSpan**, **Adafruit SHT31 Library** and **Adafruit BusIO** (Library Manager) |
 | Board | **ESP32 Dev Module** |
 | Partition Scheme | **Huge APP (3MB No OTA/1MB SPIFFS)** |
-| Libraries | **HomeSpan**, **Adafruit SHT31 Library** (and its Adafruit BusIO dependency) |
+| Upload Speed | **115200** |
 
-The partition scheme matters. A HomeSpan build is about 1.4 MB, and the default scheme allows only about 1.3 MB for the app, so compiling fails with `Sketch too big`.
-
-For an SHT40, install **Adafruit SHT4x** instead and swap the `sht31.*` calls for the SHT4x equivalents.
+The partition scheme matters: a HomeSpan build is about 1.4 MB, and the default scheme allows only about 1.3 MB for the app, so compiling fails with `Sketch too big`.
 
 ### First-time Wi-Fi setup
 
@@ -119,30 +126,21 @@ The sensor is read and published every 15 minutes by default. Change `READ_INTER
 
 ### Troubleshooting uploads
 
-Symptom: esptool connects and prints the chip details, then fails with `Unable to verify flash chip connection`, often right after `Changing baud rate to 921600`.
+If the upload fails with `Unable to verify flash chip connection`, set Upload Speed to 115200 and use the BOOT and EN sequence. The full troubleshooting table is in [`docs/arduino-ide-setup.md`](docs/arduino-ide-setup.md#troubleshooting).
 
-- Set **Tools > Upload Speed** to **115200** (the default is 921600). Check that the setting stuck before uploading again.
-- Put the board in bootloader mode by hand: hold **BOOT**, tap **EN** once, then release BOOT, and start the upload within a few seconds.
-- Try a different USB cable, plugged directly into the computer rather than a hub. A cable that carries enough data to identify the chip can still drop out during the flash write.
-- Close the Serial Monitor and anything else that has the serial port open.
-- To test the board and cable without the IDE, install [esptool](https://github.com/espressif/esptool) and run `esptool --chip esp32 --port <your port> --baud 115200 read-mac`. If that succeeds, the board, cable and drivers are fine and the problem is in the upload settings.
+## Housing
 
-## Enclosure
+The housing is the **[ESP Smart Home Case | Parametric | Antenna](https://makerworld.com/en/models/2540084-esp-smart-home-case-parametric-antenna)** by **i-BoxIt** on MakerWorld. It is a snap-fit two-part case for ESP boards. This project adds a mount for the SHT3x-DIS breakout to its lid:
 
-A two-part, screw-together box in [`hardware/enclosure/`](hardware/enclosure/): `case_base.stl`, `case_lid.stl`, and the parametric source `sensor_case.scad`.
+- the sensor board clicks into the lid on two hooks, with two locating pegs and no screws
+- the sensor chip sits over a vent opening in the lid, so it reads outside air rather than the air inside the case
+- the right-angle header points toward the middle of the lid so a Dupont connector can slide on
 
-- One USB-C cutout, plus a vent grille over the sensor so it reads room air rather than the board's own heat
-- Four M3 screw bosses and internal rails that hold the devkit in place
-- Sizing is generic, not measured to a specific board. Print the base first as a fit check and adjust the parameters at the top of the `.scad` file if needed
+**The case files are not in this repository.** The original is licensed under MakerWorld's *Standard Digital File License*, which does not allow sharing or hosting the original or modified files. Download the case from the link above, then run the script in [`hardware/enclosure/`](hardware/enclosure/) to produce the modified lid for your own use. The full instructions, assumptions and printing notes are in [`hardware/enclosure/README.md`](hardware/enclosure/README.md).
 
-To regenerate the STLs:
+Status: the modified lid has been checked in software but **has not been printed yet**, and the fit of the devkit in the base has not been verified. Print the lid on its own as a fit test first.
 
-```sh
-openscad -D 'PART="base"' -o case_base.stl sensor_case.scad
-openscad -D 'PART="lid"'  -o case_lid.stl  sensor_case.scad
-```
-
-Mount the sensor away from the USB adapter and the ESP32's own heat. The vent grille helps, but the board warms the air inside the box a little, so expect readings slightly above true room temperature.
+Mount the sensor away from the USB adapter and the ESP32's own heat. The board warms the air inside the case a little, so the vent opening matters for accurate readings.
 
 ## Repository layout
 
@@ -152,6 +150,7 @@ Mount the sensor away from the USB adapter and the ESP32's own heat. The vent gr
 ├── CHANGELOG.md
 ├── VERSION
 ├── docs/
+│   ├── arduino-ide-setup.md
 │   ├── wiring_diagram.png
 │   └── wiring_diagram.svg
 ├── firmware/
@@ -159,14 +158,22 @@ Mount the sensor away from the USB adapter and the ESP32's own heat. The vent gr
 │       └── HomeKitTempSensor.ino
 └── hardware/
     └── enclosure/
-        ├── sensor_case.scad
-        ├── case_base.stl
-        └── case_lid.stl
+        ├── README.md
+        ├── add_sht3x_mount.py
+        ├── requirements.txt
+        ├── mount_layout.png
+        └── mount_section.png
 ```
 
 ## Versioning
 
 The project uses [Semantic Versioning](https://semver.org/) and each release is a git tag (`v0.1.0`, and so on). To release: update `VERSION`, `FW_VERSION` in the sketch and `CHANGELOG.md`, commit, then `git tag -a vX.Y.Z -m "vX.Y.Z"`.
+
+## Credits
+
+- Housing: [ESP Smart Home Case | Parametric | Antenna](https://makerworld.com/en/models/2540084-esp-smart-home-case-parametric-antenna) by i-BoxIt (MakerWorld Standard Digital File License). The case is not redistributed here.
+- HomeKit support: [HomeSpan](https://github.com/HomeSpan/HomeSpan).
+- Sensor driver: Adafruit SHT31 Library.
 
 ## Notes
 

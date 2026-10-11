@@ -10,8 +10,22 @@ Version numbers cover the whole project (firmware, wiring and enclosure). The fi
 ### To do before 1.0.0
 - Flash the firmware to a real board, confirm the LED behaves as described, and confirm it pairs with Apple Home
 - Confirm readings against a reference thermometer
-- Print the enclosure and confirm the devkit and sensor fit
+- Print the modified lid and confirm the sensor board clicks in and the devkit fits the base
 - Add a licence
+
+## [0.3.0] - 2026-10-11
+
+### Added
+- Housing based on the MakerWorld "ESP Smart Home Case | Parametric | Antenna" by i-BoxIt, with a sensor mount added to the lid: snap-in hooks and locating pegs for an SHT3x-DIS breakout, and a vent opening under the sensor chip. Provided as a script (`hardware/enclosure/add_sht3x_mount.py`) that builds the modified lid from the case file you download, because the MakerWorld licence does not allow redistributing the case files
+- `docs/arduino-ide-setup.md`: step-by-step Arduino IDE setup listing the board package and libraries, board settings and troubleshooting
+- Housing README with attribution, assumptions and printing notes
+
+### Changed
+- README: bill of materials and wiring notes updated for the SHT3x-DIS breakout (right-angle header, pin order SCL, SDA, GND, VCC); housing section rewritten; Arduino section now links to the setup guide
+- `.gitignore` blocks `hardware/enclosure/*.stl` so case files can't be committed by accident
+
+### Removed
+- The generic screw-together enclosure (`sensor_case.scad`, `case_base.stl`, `case_lid.stl`), replaced by the MakerWorld-based housing. It remains available in the history at tag `v0.1.0`
 
 ## [0.2.0] - 2026-10-11
 

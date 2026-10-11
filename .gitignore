@@ -4,3 +4,7 @@
 build/
 .vscode/
 .idea/
+
+# MakerWorld case files and anything derived from them: not redistributable (see hardware/enclosure/README.md)
+hardware/enclosure/*.stl
+hardware/enclosure/source/
