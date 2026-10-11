@@ -7,11 +7,17 @@ Version numbers cover the whole project (firmware, wiring and enclosure). The fi
 
 ## [Unreleased]
 
+### Added
+- MIT licence (`LICENSE`) and a Licence section in the README
+- `docs/images/` folder for photos of the real prototype
+
+### Verified
+- v0.3.0 firmware flashed to hardware; the status LED blinks while waiting for Wi-Fi and stays solid once connected
+
 ### To do before 1.0.0
-- Flash the firmware to a real board, confirm the LED behaves as described, and confirm it pairs with Apple Home
+- Confirm it pairs with Apple Home
 - Confirm readings against a reference thermometer
 - Print the modified lid and confirm the sensor board clicks in and the devkit fits the base
-- Add a licence
 
 ## [0.3.0] - 2026-10-11
 

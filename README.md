@@ -148,9 +148,11 @@ Mount the sensor away from the USB adapter and the ESP32's own heat. The board w
 .
 ├── README.md
 ├── CHANGELOG.md
+├── LICENSE
 ├── VERSION
 ├── docs/
 │   ├── arduino-ide-setup.md
+│   ├── images/
 │   ├── wiring_diagram.png
 │   └── wiring_diagram.svg
 ├── firmware/
@@ -168,6 +170,10 @@ Mount the sensor away from the USB adapter and the ESP32's own heat. The board w
 ## Versioning
 
 The project uses [Semantic Versioning](https://semver.org/) and each release is a git tag (`v0.1.0`, and so on). To release: update `VERSION`, `FW_VERSION` in the sketch and `CHANGELOG.md`, commit, then `git tag -a vX.Y.Z -m "vX.Y.Z"`.
+
+## Licence
+
+The firmware, scripts and documentation in this repository are released under the [MIT Licence](LICENSE): free to use, copy, modify and share, including commercially, as long as the copyright notice is kept. The third-party housing is **not** covered by this licence and is not included (see [Housing](#housing)). HomeSpan (MIT) and the Adafruit libraries (BSD) keep their own licences.
 
 ## Credits
 
